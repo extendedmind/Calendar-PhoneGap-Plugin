@@ -264,7 +264,7 @@ public class Calendar extends CordovaPlugin {
       calendar_end.setTime(date_end);
 
       //projection of DB columns
-      String[] l_projection = new String[]{"calendar_id", "title", "dtstart", "dtend", "eventLocation", "allDay", "rrule"};
+      String[] l_projection = new String[]{"calendar_id", "title", "dtstart", "dtend", "eventLocation", "allDay", "rrule", "exdate"};
 
       //actual query
       Cursor cursor =
@@ -286,6 +286,7 @@ public class Calendar extends CordovaPlugin {
                 .put("eventLocation", cursor.getString(cursor.getColumnIndex("eventLocation")) != null ? cursor.getString(cursor.getColumnIndex("eventLocation")) : "")
                 .put("allDay", cursor.getInt(cursor.getColumnIndex("allDay")))
                 .put("rrule", cursor.getString(cursor.getColumnIndex("rrule")))
+                .put("exdate", cursor.getString(cursor.getColumnIndex("rrule")))
         );
       }
 
