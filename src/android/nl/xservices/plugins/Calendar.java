@@ -271,7 +271,7 @@ public class Calendar extends CordovaPlugin {
         contentResolver.query(
           l_eventUri,
           l_projection,
-          "( dtstart > " + calendar_start.getTimeInMillis() + " AND (dtend < " + calendar_end.getTimeInMillis() + " OR dtend = 0) AND deleted = 0)",
+          "( dtstart > " + calendar_start.getTimeInMillis() + " AND (dtend < " + calendar_end.getTimeInMillis() + " OR rrule IS NOT NULL) AND deleted = 0)",
           null,
           "dtstart ASC");
       int i = 0;
