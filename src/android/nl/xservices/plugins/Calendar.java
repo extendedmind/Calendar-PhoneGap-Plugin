@@ -264,14 +264,14 @@ public class Calendar extends CordovaPlugin {
       calendar_end.setTime(date_end);
 
       //projection of DB columns
-      String[] l_projection = new String[]{"calendar_id", "title", "dtstart", "dtend", "eventLocation", "allDay", "rrule", "exdate", "recurrenceId"};
+      String[] l_projection = new String[]{"calendar_id", "title", "dtstart", "dtend", "eventLocation", "allDay", "rrule", "exdate", "recurrence_id"};
 
       //actual query
       Cursor cursor =
         contentResolver.query(
           l_eventUri,
           l_projection,
-          "( (( dtstart > " + calendar_start.getTimeInMillis() + " AND dtend < " + calendar_end.getTimeInMillis() + ") OR rrule IS NOT NULL OR recurrenceId IS NOT NULL) AND deleted = 0)",
+          "( (( dtstart > " + calendar_start.getTimeInMillis() + " AND dtend < " + calendar_end.getTimeInMillis() + ") OR rrule IS NOT NULL OR recurrence_id IS NOT NULL) AND deleted = 0)",
           null,
           "dtstart ASC");
       int i = 0;
@@ -287,7 +287,7 @@ public class Calendar extends CordovaPlugin {
                 .put("allDay", cursor.getInt(cursor.getColumnIndex("allDay")))
                 .put("rrule", cursor.getString(cursor.getColumnIndex("rrule")))
                 .put("exdate", cursor.getString(cursor.getColumnIndex("exdate")))
-                .put("recurrenceId", cursor.getString(cursor.getColumnIndex("recurrenceId")))
+                .put("recurrence_id", cursor.getString(cursor.getColumnIndex("recurrence_id")))
         );
       }
 
