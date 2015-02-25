@@ -107,8 +107,10 @@ public class CalendarProviderAccessor extends AbstractCalendarAccessor {
                                        String[] projection, String selection, String[] selectionArgs,
                                        String sortOrder) {
     Uri.Builder builder = Instances.CONTENT_URI.buildUpon();
-    ContentUris.appendId(builder, startFrom);
-    ContentUris.appendId(builder, startTo);
+    if (!(startFrom == 0 && startTo == 0)){
+      ContentUris.appendId(builder, startFrom);
+      ContentUris.appendId(builder, startTo);
+    }
     return this.cordova.getActivity().getContentResolver().query(
         builder.build(), projection, selection, selectionArgs, sortOrder);
   }
