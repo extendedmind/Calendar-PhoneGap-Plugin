@@ -267,8 +267,13 @@ public class Calendar extends CordovaPlugin {
       String[] l_projection = new String[]{"calendar_id", "title", "dtstart", "dtend", "eventLocation", "allDay"};
 
       //actual query
-      Cursor cursor = contentResolver.query(l_eventUri, l_projection, "( ((dtstart >" + calendar_start.getTimeInMillis() + " AND dtend <" + calendar_end.getTimeInMillis() + ") OR rrule IS NOT NULL) AND deleted = 0)", null, "dtstart ASC");
-
+      Cursor cursor =
+        contentResolver.query(
+          l_eventUri,
+          l_projection,
+          "( dtstart > " + calendar_start.getTimeInMillis() + " AND (dtend < " + calendar_end.getTimeInMillis() + " OR dtend = 0) AND deleted = 0)",
+          null,
+          "dtstart ASC");
       int i = 0;
       while (cursor.moveToNext()) {
         result.put(
