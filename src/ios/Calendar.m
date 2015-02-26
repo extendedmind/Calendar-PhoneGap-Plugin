@@ -287,40 +287,23 @@
 -(NSMutableArray*)eventsToDataArray: (NSArray*)matchingEvents {
   NSMutableArray *results = [[NSMutableArray alloc] initWithCapacity:matchingEvents.count];
 
-  NSDateFormatter *df = [[NSDateFormatter alloc] init];
-  [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-
   for (EKEvent * event in matchingEvents) {
     NSMutableDictionary *entry = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+                                  event.calendar.calendarIdentifier, @"calendar_id",
+                                  event.eventIdentifier, @"event_id",
                                   event.title, @"title",
-                                  [df stringFromDate:event.startDate], @"startDate",
-                                  [df stringFromDate:event.endDate], @"endDate",
+                                  floor([event.startDate timeIntervalSince1970] * 1000)), @"begin",
+                                  floor([event.endDate timeIntervalSince1970] * 1000)), @"end",
                                   nil];
     // optional fields
     if (event.location != nil) {
-      [entry setObject:event.location forKey:@"location"];
+      [entry setObject:event.location forKey:@"eventLocation"];
     }
-    if (event.notes != nil) {
-      [entry setObject:event.notes forKey:@"message"];
+    if (event.allDay) {
+      [entry setObject:event.allDay forKey:@"allDay"];
     }
-    if (event.attendees != nil) {
-      NSMutableArray * attendees = [[NSMutableArray alloc] init];
-      for (EKParticipant * participant in event.attendees) {
-
-        NSString *role = [[NSArray arrayWithObjects:@"Unknown", @"Required", @"Optional", @"Chair", @"Non Participant", nil] objectAtIndex:participant.participantRole];
-        NSString *status = [[NSArray arrayWithObjects:@"Unknown", @"Pending", @"Accepted", @"Declined", @"Tentative", @"Delegated", @"Completed", @"In Process", nil] objectAtIndex:participant.participantStatus];
-        NSString *type = [[NSArray arrayWithObjects:@"Unknown", @"Person", @"Room", @"Resource", @"Group", nil] objectAtIndex:participant.participantType];
-
-        NSMutableDictionary *attendeeEntry = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-                                              participant.name, @"name",
-                                              [participant.URL absoluteString], @"URL",
-                                              status, @"status",
-                                              type, @"type",
-                                              role, @"role",
-                                              nil];
-        [attendees addObject:attendeeEntry];
-      }
-      [entry setObject:attendees forKey:@"attendees"];
+    if (event.hasRecurrenceRules) {
+      [entry setObject:event.hasRecurrenceRules forKey:@"rrule"];
     }
     [results addObject:entry];
   }
