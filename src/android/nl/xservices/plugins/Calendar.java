@@ -313,7 +313,7 @@ public class Calendar extends CordovaPlugin {
       JSONArray result = new JSONArray();
       long input_start_date = jsonFilter.getLong("startTime");
       long input_end_date = jsonFilter.getLong("endTime");
-      JSONArray calendardIds = jsonFilter.optArray("calendarIds");
+      JSONArray calendardIds = jsonFilter.optJSONArray("calendarIds");
 
       Uri l_isntanceUri = Uri.parse("content://com.android.calendar/instances/when/" + input_start_date + "/" + input_end_date);
 
