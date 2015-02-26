@@ -378,9 +378,9 @@
   NSArray* calendarIds = [options objectForKey:@"calendarIds"];
 
   NSTimeInterval startTimestampInSeconds = [[options objectForKey:@"startDate"] doubleValue] / 1000;
-  NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:startTimestampInSeconds]];
+  NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:startTimestampInSeconds];
   NSTimeInterval endTimestampInSeconds = [[options objectForKey:@"endDate"] doubleValue] / 1000;
-  NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:endTimestampInSeconds]];
+  NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:endTimestampInSeconds];
 
   NSMutableArray *calendarArray;
   if ([calendarIds count] > 0){
@@ -389,10 +389,10 @@
       [calendarArray addObject:[self findEKCalendarById:calendarId]];
     }];
   }else{
-    calendarArray = [self.eventStore calendarsForEntityType:EKEntityTypeEvent];
+    calendarArray = [NSMutableArray arrayWithArray:[self.eventStore calendarsForEntityType:EKEntityTypeEvent]];
   }
 
-  NSPredicate *fetchCalendarEvents = [eventStore predicateForEventsWithStartDate:[NSDate date] startDate:startDate [NSDate date] endDate:endDate calendars:calendarArray];
+  NSPredicate *fetchCalendarEvents = [eventStore predicateForEventsWithStartDate: startDate:startDate endDate:endDate calendars:calendarArray];
   NSArray *matchingEvents = [eventStore eventsMatchingPredicate:fetchCalendarEvents];
   NSMutableArray *eventsDataArray = [self eventsToDataArray:matchingEvents];
   CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus: CDVCommandStatus_OK messageAsArray:eventsDataArray];
