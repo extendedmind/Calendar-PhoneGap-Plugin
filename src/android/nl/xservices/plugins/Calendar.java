@@ -322,7 +322,7 @@ public class Calendar extends CordovaPlugin {
 
       String inCalendarAnd = "";
       if (calendardIds != null && calendardIds.length() > 0){
-        inCalendarAnd += "(calendar_id IN (" + calId;
+        inCalendarAnd += "(calendar_id IN (";
         for (int i = 0 ; i < calendardIds.length(); i++) {
           String calId = calendardIds.getString(i);
           if (i > 0){
