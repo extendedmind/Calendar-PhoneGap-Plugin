@@ -392,7 +392,7 @@
     calendarArray = [NSMutableArray arrayWithArray:[self.eventStore calendarsForEntityType:EKEntityTypeEvent]];
   }
 
-  NSPredicate *fetchCalendarEvents = [eventStore predicateForEventsWithStartDate: startDate:startDate endDate:endDate calendars:calendarArray];
+  NSPredicate *fetchCalendarEvents = [eventStore predicateForEventsWithStartDate: startDate endDate:endDate calendars:calendarArray];
   NSArray *matchingEvents = [eventStore eventsMatchingPredicate:fetchCalendarEvents];
   NSMutableArray *eventsDataArray = [self eventsToDataArray:matchingEvents];
   CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus: CDVCommandStatus_OK messageAsArray:eventsDataArray];
