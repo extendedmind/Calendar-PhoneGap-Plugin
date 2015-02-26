@@ -29,6 +29,7 @@ public class Calendar extends CordovaPlugin {
   public static final String ACTION_DELETE_EVENT = "deleteEvent";
   public static final String ACTION_FIND_EVENT = "findEvent";
   public static final String ACTION_LIST_EVENTS_IN_RANGE = "listEventsInRange";
+  public static final String ACTION_LIST_EVENT_INSTANCES = "listEventInstances";
   public static final String ACTION_LIST_CALENDARS = "listCalendars";
   public static final String ACTION_CREATE_CALENDAR = "createCalendar";
 
@@ -60,6 +61,8 @@ public class Calendar extends CordovaPlugin {
       return createEventInteractively(args);
     } else if (ACTION_LIST_EVENTS_IN_RANGE.equals(action)) {
       return listEventsInRange(args);
+    } else if (ACTION_LIST_EVENT_INSTANCES.equals(action)) {
+      return listEventInstances(args);
     } else if (!hasLimitedSupport && ACTION_FIND_EVENT.equals(action)) {
       return findEvents(args);
     } else if (!hasLimitedSupport && ACTION_DELETE_EVENT.equals(action)) {
@@ -294,6 +297,70 @@ public class Calendar extends CordovaPlugin {
       callback.sendPluginResult(res);
       return true;
     } catch (JSONException e) {
+      System.err.println("Exception: " + e.getMessage());
+    }
+    return false;
+  }
+
+  private boolean listEventInstances(JSONArray args){
+    if (Build.VERSION.SDK_INT < 8) {
+      return false;
+    }
+    try {
+
+      ContentResolver contentResolver = this.cordova.getActivity().getContentResolver();
+      JSONObject jsonFilter = args.getJSONObject(0);
+      JSONArray result = new JSONArray();
+      long input_start_date = jsonFilter.getLong("startTime");
+      long input_end_date = jsonFilter.getLong("endTime");
+      JSONArray calendardIds = jsonFilter.optArray("calendarIds");
+
+      Uri l_isntanceUri = Uri.parse("content://com.android.calendar/instances/when/" + input_start_date + "/" + input_end_date);
+
+      //projection of DB columns
+      String[] l_projection = new String[]{"calendar_id", "event_id", "title", "begin", "end", "eventLocation", "allDay", "rrule"};
+
+      String inCalendarAnd = "";
+      if (calendardIds != null && calendardIds.length() > 0){
+        inCalendarAnd += "(calendar_id IN (" + calId;
+        for (int i = 0 ; i < calendardIds.length(); i++) {
+          String calId = calendardIds.getString(i);
+          if (i > 0){
+            inCalendarAnd += ", ";
+          }
+          inCalendarAnd += calId;
+        }
+        inCalendarAnd += ")) AND ";
+      }
+
+      //actual query
+      Cursor cursor =
+        contentResolver.query(
+          l_isntanceUri,
+          l_projection,
+          "(" + inCalendarAnd + "deleted = 0)",
+          null,
+          "begin ASC");
+      int i = 0;
+      while (cursor.moveToNext()) {
+        result.put(
+            i++,
+            new JSONObject()
+                .put("calendar_id", cursor.getString(cursor.getColumnIndex("calendar_id")))
+                .put("event_id", cursor.getString(cursor.getColumnIndex("event_id")))
+                .put("title", cursor.getString(cursor.getColumnIndex("title")))
+                .put("begin", cursor.getLong(cursor.getColumnIndex("begin")))
+                .put("end", cursor.getLong(cursor.getColumnIndex("end")))
+                .put("eventLocation", cursor.getString(cursor.getColumnIndex("eventLocation")))
+                .put("allDay", cursor.getInt(cursor.getColumnIndex("allDay")))
+                .put("rrule", cursor.getString(cursor.getColumnIndex("rrule")))
+        );
+      }
+
+      PluginResult res = new PluginResult(PluginResult.Status.OK, result);
+      callback.sendPluginResult(res);
+      return true;
+    } catch (Exception e) {
       System.err.println("Exception: " + e.getMessage());
     }
     return false;

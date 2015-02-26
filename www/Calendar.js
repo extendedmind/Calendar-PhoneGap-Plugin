@@ -202,6 +202,14 @@ Calendar.prototype.listEventsInRange = function (startDate, endDate, successCall
   }])
 };
 
+Calendar.prototype.listEventInstances = function (calendarIds, startDate, endDate, successCallback, errorCallback) {
+  cordova.exec(successCallback, errorCallback, "Calendar", "listEventInstances", [{
+    "calendarIds": calendarIds,
+    "startTime": startDate instanceof Date ? startDate.getTime() : startDate,
+    "endTime": endDate instanceof Date ? endDate.getTime() : endDate,
+  }])
+};
+
 Calendar.prototype.listCalendars = function (successCallback, errorCallback) {
   cordova.exec(successCallback, errorCallback, "Calendar", "listCalendars", []);
 };
