@@ -256,6 +256,17 @@
   return nil;
 }
 
+-(EKCalendar*)findEKCalendarById: (NSString *)calendarId {
+  for (EKCalendar *thisCalendar in [self.eventStore calendarsForEntityType:EKEntityTypeEvent]){
+    NSLog(@"Calendar: %@", thisCalendar.title);
+    if ([thisCalendar.calendarIdentifier isEqualToString:calendarId]) {
+      return thisCalendar;
+    }
+  }
+  NSLog(@"No match found for calendar with id: %@", calendarId);
+  return nil;
+}
+
 -(EKSource*)findEKSource {
   // if iCloud is on, it hides the local calendars, so check for iCloud first
   for (EKSource *source in self.eventStore.sources) {
@@ -360,6 +371,32 @@
 }
 
 - (void)listEventsInRange:(CDVInvokedUrlCommand*)command {
+}
+
+- (void)listEventInstances:(CDVInvokedUrlCommand*)command {
+  NSDictionary* options = [command.arguments objectAtIndex:0];
+  NSArray* calendarIds = [options objectForKey:@"calendarIds"];
+
+  NSTimeInterval startTimestampInSeconds = [[options objectForKey:@"startDate"] doubleValue] / 1000;
+  NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:startTimestampInSeconds]];
+  NSTimeInterval endTimestampInSeconds = [[options objectForKey:@"endDate"] doubleValue] / 1000;
+  NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:endTimestampInSeconds]];
+
+  NSMutableArray *calendarArray;
+  if ([calendarIds count] > 0){
+    calendarArray = [NSMutableArray arrayWithCapacity: [calendarIds count]];
+    [calendarIds enumerateObjectsUsingBlock:^(id calendarId, NSUInteger index, BOOL *stop) {
+      [calendarArray addObject:[self findEKCalendarById:calendarId]];
+    }];
+  }else{
+    calendarArray = [self.eventStore calendarsForEntityType:EKEntityTypeEvent];
+  }
+
+  NSPredicate *fetchCalendarEvents = [eventStore predicateForEventsWithStartDate:[NSDate date] startDate:startDate [NSDate date] endDate:endDate calendars:calendarArray];
+  NSArray *matchingEvents = [eventStore eventsMatchingPredicate:fetchCalendarEvents];
+  NSMutableArray *eventsDataArray = [self eventsToDataArray:matchingEvents];
+  CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus: CDVCommandStatus_OK messageAsArray:eventsDataArray];
+  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)createEventWithOptions:(CDVInvokedUrlCommand*)command {
