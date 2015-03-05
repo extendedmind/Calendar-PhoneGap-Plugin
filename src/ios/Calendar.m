@@ -379,7 +379,9 @@
 
   NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
   [formatter setDateFormat:@"YYYY-MM-dd hh:mm:ss"];
+  NSLog(@"Event search from ts %f", startTimestampInSeconds);
   NSLog(@"Event search from %@",[formatter stringFromDate:startDate]);
+  NSLog(@"Event search to ts %f", endTimestampInSeconds);
   NSLog(@"Event search to %@",[formatter stringFromDate:endDate]);
 
   NSPredicate *fetchCalendarEvents = [eventStore predicateForEventsWithStartDate: startDate endDate:endDate calendars:calendarArray];
