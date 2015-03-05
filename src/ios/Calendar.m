@@ -360,9 +360,9 @@
   NSDictionary* options = [command.arguments objectAtIndex:0];
   NSArray* calendarIds = [options objectForKey:@"calendarIds"];
 
-  NSTimeInterval startTimestampInSeconds = [[options objectForKey:@"startDate"] intValue] / 1000;
+  NSTimeInterval startTimestampInSeconds = [[options objectForKey:@"startTime"] intValue] / 1000;
   NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:startTimestampInSeconds];
-  NSTimeInterval endTimestampInSeconds = [[options objectForKey:@"endDate"] intValue] / 1000;
+  NSTimeInterval endTimestampInSeconds = [[options objectForKey:@"endTime"] intValue] / 1000;
   NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:endTimestampInSeconds];
 
   NSMutableArray *calendarArray;
