@@ -292,18 +292,18 @@
                                   event.calendar.calendarIdentifier, @"calendar_id",
                                   event.eventIdentifier, @"event_id",
                                   event.title, @"title",
-                                  floor([event.startDate timeIntervalSince1970] * 1000)), @"begin",
-                                  floor([event.endDate timeIntervalSince1970] * 1000)), @"end",
+                                  floor([event.startDate timeIntervalSince1970] * 1000), @"begin",
+                                  floor([event.endDate timeIntervalSince1970] * 1000), @"end",
                                   nil];
     // optional fields
     if (event.location != nil) {
       [entry setObject:event.location forKey:@"eventLocation"];
     }
     if (event.allDay) {
-      [entry setObject:event.allDay forKey:@"allDay"];
+      [entry setObject:(event.allDay ? "true" : "false") forKey:@"allDay"];
     }
     if (event.hasRecurrenceRules) {
-      [entry setObject:event.hasRecurrenceRules forKey:@"rrule"];
+      [entry setObject:(event.hasRecurrenceRules ? "true" : "false") forKey:@"rrule"];
     }
     [results addObject:entry];
   }
