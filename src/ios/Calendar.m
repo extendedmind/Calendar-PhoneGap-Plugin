@@ -292,8 +292,8 @@
                                   event.calendar.calendarIdentifier, @"calendar_id",
                                   event.eventIdentifier, @"event_id",
                                   event.title, @"title",
-                                  (NSInteger) floor([event.startDate timeIntervalSince1970] * 1000), @"begin",
-                                  (NSInteger) floor([event.endDate timeIntervalSince1970] * 1000), @"end",
+                                  [NSNumber numberWithInteger:(NSInteger)floor([event.startDate timeIntervalSince1970] * 1000)], @"begin",
+                                  [NSNumber numberWithInteger:(NSInteger)floor([event.endDate timeIntervalSince1970] * 1000)], @"end",
                                   nil];
     // optional fields
     if (event.location != nil) {
