@@ -300,10 +300,10 @@
       [entry setObject:event.location forKey:@"eventLocation"];
     }
     if (event.allDay) {
-      [entry setObject:(event.allDay ? "true" : "false") forKey:@"allDay"];
+      [entry setObject:"true" forKey:@"allDay"];
     }
     if (event.hasRecurrenceRules) {
-      [entry setObject:(event.hasRecurrenceRules ? "true" : "false") forKey:@"rrule"];
+      [entry setObject:"true" forKey:@"rrule"];
     }
     [results addObject:entry];
   }
