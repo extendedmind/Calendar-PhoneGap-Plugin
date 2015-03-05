@@ -360,9 +360,9 @@
   NSDictionary* options = [command.arguments objectAtIndex:0];
   NSArray* calendarIds = [options objectForKey:@"calendarIds"];
 
-  NSTimeInterval startTimestampInSeconds = [[options objectForKey:@"startTime"] intValue] / 1000;
+  NSTimeInterval startTimestampInSeconds = [[options objectForKey:@"startTime"] doubleValue] / 1000;
   NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:startTimestampInSeconds];
-  NSTimeInterval endTimestampInSeconds = [[options objectForKey:@"endTime"] intValue] / 1000;
+  NSTimeInterval endTimestampInSeconds = [[options objectForKey:@"endTime"] doubleValue] / 1000;
   NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:endTimestampInSeconds];
 
   NSMutableArray *calendarArray;
@@ -379,9 +379,9 @@
 
   NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
   [formatter setDateFormat:@"YYYY-MM-dd hh:mm:ss"];
-  NSLog(@"Event search from ts %f", startTimestampInSeconds);
+  NSLog(@"Event search from ts %d", startTimestampInSeconds);
   NSLog(@"Event search from %@",[formatter stringFromDate:startDate]);
-  NSLog(@"Event search to ts %f", endTimestampInSeconds);
+  NSLog(@"Event search to ts %d", endTimestampInSeconds);
   NSLog(@"Event search to %@",[formatter stringFromDate:endDate]);
 
   NSPredicate *fetchCalendarEvents = [eventStore predicateForEventsWithStartDate: startDate endDate:endDate calendars:calendarArray];
