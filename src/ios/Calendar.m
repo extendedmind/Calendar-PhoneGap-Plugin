@@ -367,13 +367,20 @@
 
   NSMutableArray *calendarArray;
   if ([calendarIds count] > 0){
+    NSLog(@"Getting events for selected calendars");    
     calendarArray = [NSMutableArray arrayWithCapacity: [calendarIds count]];
     [calendarIds enumerateObjectsUsingBlock:^(id calendarId, NSUInteger index, BOOL *stop) {
       [calendarArray addObject:[self findEKCalendarById:calendarId]];
     }];
   }else{
+    NSLog(@"Getting events for all calendars");    
     calendarArray = [NSMutableArray arrayWithArray:[self.eventStore calendarsForEntityType:EKEntityTypeEvent]];
   }
+
+  NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+  [formatter setDateFormat:@"YYYY-MM-dd hh:mm:ss"];
+  NSLog(@"Event search from %@",[formatter stringFromDate:startDate]);
+  NSLog(@"Event search to %@",[formatter stringFromDate:endDate]);
 
   NSPredicate *fetchCalendarEvents = [eventStore predicateForEventsWithStartDate: startDate endDate:endDate calendars:calendarArray];
   NSArray *matchingEvents = [eventStore eventsMatchingPredicate:fetchCalendarEvents];
