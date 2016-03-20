@@ -9,14 +9,10 @@
 @synthesize eventStore;
 @synthesize interactiveCallbackId;
 
-#pragma mark Initialisation functions
+#pragma mark Initialization functions
 
-- (CDVPlugin*) initWithWebView:(UIWebView*)theWebView {
-  self = (Calendar*)[super initWithWebView:theWebView];
-  if (self) {
+- (void) pluginInitialize {
     [self initEventStoreWithCalendarCapabilities];
-  }
-  return self;
 }
 
 - (void)initEventStoreWithCalendarCapabilities {
